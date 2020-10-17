@@ -236,6 +236,10 @@ const pageIndex = [
                 type: PAGE,
                 href: "migrating-data"
             }, {
+                Title: "Changes in TimescaleDB 2.0",
+                type: PAGE,
+                href: "changes-in-timescaledb-2"
+            }, {
                 type: HIDDEN_REDIRECT,
                 href: "basic-operations",
                 to: "/using-timescaledb/hypertables"
@@ -495,9 +499,24 @@ const pageIndex = [
                 type: PAGE,
                 href: "tooling"
             }, {
-                Title: "Update software",
+                Title: "Update Timescale",
                 type: PAGE,
-                href: "update-db"
+                href: "update-timescale",
+                children: [
+                    {
+                        Title: "Updating 1.x",
+                        type: PAGE,
+                        href: "update-db-1"
+                    }, {
+                        Title: "Updating 2.x",
+                        type: PAGE,
+                        href: "update-db-2"
+                    }, {
+                        Title: "Upgrading PostgreSQL",
+                        type: PAGE,
+                        href: "upgrade-pg"
+                    }
+                ]
             }, {
                 Title: "Telemetry",
                 type: PAGE,
@@ -694,8 +713,8 @@ const pageIndex = [
                 to: "/using-timescaledb/backup"
             }, {
                 type: HIDDEN_REDIRECT,
-                href: "update-db",
-                to: "/using-timescaledb/update-db"
+                href: "update-timescale",
+                to: "/using-timescaledb/update-timescale"
             }, {
                 type: HIDDEN_REDIRECT,
                 href: "data-retention",

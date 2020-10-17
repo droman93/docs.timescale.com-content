@@ -1,25 +1,16 @@
-# Updating software versions [](update)
+# Updating TimescaleDB 1.x [](update)
 
-This section describes how to upgrade between different versions of
-TimescaleDB.  Since version 0.1.0, TimescaleDB supports **in-place updates**:
-you don't need to dump and restore your data, and versions are published with
-automated migration scripts that convert any internal state if necessary.
+Use these instructions to update TimescaleDB within the 1.x version
 
->:TIP: If you are looking to upgrade the version of the **PostgreSQL instance** (e.g. from 11 to 12) rather than the version of the TimescaleDB extension, you have two choices. Either use [`pg_upgrade`][pg_upgrade] with the command:
-> ```
-> pg_upgrade -b oldbindir -B newbindir -d olddatadir -D newdatadir"
-> ```
-> or [backup][] and then restore into a new version of the instance.
-
-### Using ALTER EXTENSION
+### Update TimescaleDB
 
 Software upgrades use PostgreSQL's `ALTER EXTENSION` support to update to the
-latest version. Since 0.9.0, TimescaleDB supports having different extension
+latest version. TimescaleDB supports having different extension
 versions on different databases within the same PostgreSQL instance. This
 allows you to update extensions independently on different databases. The
-upgrade process is involves three-steps:
+upgrade process involves three-steps:
 
-1. Optionally, perform a [backup][] of your database via `pg_dump`.
+1. We recommend that you perform a [backup][] of your database via `pg_dump`.
 1. [Install][] the latest version of the TimescaleDB extension.
 1. Execute the following `psql` command inside any database that you want to
    update:
@@ -34,29 +25,6 @@ triggering the load of a previous TimescaleDB version on session startup.
 It must also be the first command you execute in the session. 
 <!-- -->
 
->:WARNING: If upgrading from a TimescaleDB version older than 0.12.0,
-you will need to restart your database before calling `ALTER EXTENSION`.
-Remember that restarting PostgreSQL is accomplished via different
-commands on different platforms:
-- Linux services: `sudo service postgresql restart`
-- Mac Homebrew: `brew services restart postgresql`
-- Docker: see below
-
-<!-- -->
-
->:WARNING: If you are upgrading from a version before 0.11.0 make sure your
-root table does not contain data otherwise the update will fail.
-Data can be migrated as follows:
-```sql
-BEGIN;
-SET timescaledb.restoring = 'off';
-INSERT INTO hypertable SELECT * FROM ONLY hypertable;
-SET timescaledb.restoring = 'on';
-TRUNCATE ONLY hypertable;
-SET timescaledb.restoring = 'off';
-COMMIT;
-```
-
 This will upgrade TimescaleDB to the latest installed version, even if you
 are several versions behind.
 
@@ -70,11 +38,6 @@ After executing the command, the psql `\dx` command should show the latest versi
  timescaledb | x.y.z   | public     | Enables scalable inserts and complex queries for time-series data
 (1 row)
 ```
-
->:TIP: Beginning in v0.12.0, [telemetry][] reporting will also enable automatic
->version checking. If you have enabled telemetry, TimescaleDB will
->periodically notify you via server logs if there is a new version
->of TimescaleDB available.
 
 ### Example: Migrating docker installations [](update-docker)
 
@@ -157,6 +120,9 @@ ALTER EXTENSION timescaledb UPDATE;
 You can then run the `\dx` command to make sure you have the
 latest version of TimescaleDB installed.
 
+[upgrade-pg]: /using-timescaledb/update-timescale/upgrade-pg
+[update-db-1]: /using-timescaledb/update-timescale/update-db-1
+[update-db-2]: /using-timescaledb/update-timescale/update-db-2
 [pg_upgrade]: https://www.postgresql.org/docs/current/static/pgupgrade.html
 [backup]: /using-timescaledb/backup
 [Install]: /getting-started/installation
